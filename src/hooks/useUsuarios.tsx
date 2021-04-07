@@ -8,14 +8,14 @@ export const useUsuarios = () => {
     const paginaRef = useRef(1);
 
     useEffect(() => {
-        cargarUsuaros();
+        cargarUsuaros( paginaRef.current );
     }, [])
 
-    const cargarUsuaros = async () => {
+    const cargarUsuaros = async ( pagina : number  ) => {
 
         const res = await reqRes.get<ReqRespListado>(`/users`, {
             params: {
-                page: paginaRef.current
+                page: pagina
             }
         });
         
@@ -24,11 +24,20 @@ export const useUsuarios = () => {
     };
 
     const paginaSiguiente = () => {
+        if ( paginaRef.current < 3 ) {
+            paginaRef.current ++;
+            cargarUsuaros( paginaRef.current )
+        } else {
+            alert('Se acabaron los usuarios')
+        }        
 
     };
 
     const paginaAnterior = () => {
-
+        if ( paginaRef.current > 1 ) {
+            paginaRef.current --;
+            cargarUsuaros( paginaRef.current );
+        }
     };
 
     return {
